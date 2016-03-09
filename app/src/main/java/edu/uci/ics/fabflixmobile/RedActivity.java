@@ -8,7 +8,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,77 +27,76 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RedActivity extends ActionBarActivity {
+
+    ListView movieListView;
+    Context that;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_red);
 
+
+        movieListView = (ListView) findViewById(R.id.movieListView);
+        that = this;
+
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
-            if(bundle.getString("last_activity") != null) {
-                Toast.makeText(this, "Last activity was " + bundle.get("last_activity") + ".", Toast.LENGTH_LONG).show();
-            }
-            String msg = bundle.getString("message");
-            if(msg != null && !"".equals(msg)){
-                ((TextView)findViewById(R.id.last_page_msg_container)).setText(msg);
-            }
+            String query = bundle.getString("query");
+            getMovieList(query);
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_red, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void connectToTomcat(View view){
-
-        //
-
-        final Map<String, String> params = new HashMap<String, String>();
+    public void getMovieList(String query) {
 
 
         // no user is logged in, so we must connect to the server
         RequestQueue queue = Volley.newRequestQueue(this);
 
+        final Map<String, String> params = new HashMap<String, String>();
+
         final Context context = this;
-        String url = "http://169.234.24.214:8080/TomcatTest/servlet/TomcatTest";
+        String url = "http://54.200.63.169/fabflix/servlet/autocompleteSearch/" + query;
 
 
-        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+        StringRequest postRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>()
                 {
                     @Override
                     public void onResponse(String response) {
+                        try {
+                            ArrayList<String> values = new ArrayList<String>();
 
-                        Log.d("response", response);
-                        ((TextView)findViewById(R.id.http_response)).setText(response);
+                            JSONObject reader = new JSONObject(response);
+                            JSONArray suggestions = reader.getJSONArray("suggestions");
+                            for (int i = 0; i < suggestions.length(); ++i) {
+                                JSONObject movie = suggestions.getJSONObject(i);
+
+                                String title = movie.optString("title", "NO MOVIE NAME");
+
+//                                Log.d("title", title);
+                                values.add(title);
+                            }
+
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(that, android.R.layout.simple_list_item_1, android.R.id.text1, values);
+                            movieListView.setAdapter(adapter);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+//                        Log.d("response", response);
 
                     }
                 },
@@ -123,24 +124,4 @@ public class RedActivity extends ActionBarActivity {
         return ;
     }
 
-    public void goToBlue(View view){
-        String msg = ((EditText)findViewById(R.id.red_2_blue_message)).getText().toString();
-
-        Intent goToIntent = new Intent(this, BlueActivity.class);
-
-        goToIntent.putExtra("last_activity", "red");
-        goToIntent.putExtra("message", msg);
-
-        startActivity(goToIntent);
-    }
-    public void goToGreen(View view){
-        String msg = ((EditText)findViewById(R.id.red_2_green_message)).getText().toString();
-
-        Intent goToIntent = new Intent(this, GreenActivity.class);
-
-        goToIntent.putExtra("last_activity", "red");
-        goToIntent.putExtra("message", msg);
-
-        startActivity(goToIntent);
-    }
 }

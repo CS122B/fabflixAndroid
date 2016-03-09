@@ -10,84 +10,66 @@
     android:background="@color/blue"
     tools:context="edu.uci.ics.fabflixmobile.BlueActivity">
 
-    <LinearLayout
+    <!-- Login progress -->
+    <ProgressBar
+        android:id="@+id/login_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_centerInParent="true">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="25sp"
-            android:text="The blue page" />
-        <View android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:layout_marginBottom="20dip"
-            android:background="#FFFFFF" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:text="No message from last page."
-            android:id="@+id/last_page_msg_container"/>
-
-
-        <View android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:layout_marginBottom="20dip"
-            android:background="#FFFFFF" />
-
-        <TextView
-            android:text="Message for the red page:"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:id="@+id/label_blue_2_red_message" />
-
-        <EditText
+        <LinearLayout
+            android:id="@+id/email_login_form"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="20dp"
-            android:id="@+id/blue_2_red_message"/>
-
-        <Button
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="Go to the Red Page"
-            android:onClick="goToRed"/>
-        <View android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:layout_marginBottom="10dip"
-            android:background="#FFFFFF" />
+            android:orientation="vertical">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_email"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_password"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
 
 
-        <TextView
-            android:text="Message for the green page:"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:id="@+id/label_blue_2_green_message" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="20dp"
-            android:id="@+id/blue_2_green_message"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="Go to the Green Page"
-            android:onClick="goToGreen"/>
-        <View android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:layout_marginBottom="10dip"
-            android:background="#FFFFFF" />
-
+            <Button
+                android:id="@+id/email_sign_in_button"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/action_sign_in"
+                android:textStyle="bold" />
 
     </LinearLayout>
+    </ScrollView>
 </RelativeLayout>
